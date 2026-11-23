@@ -8,5 +8,11 @@ class User extends Model
 {
     protected $table = 'usuarios';
     public $timestamps = false;
-    protected $hidden = ['password'];
+
+    //fillable indica que campos pueden entrar en el request
+    protected $fillable = [
+        'correo',
+        'usuario',
+        'contraseña',
+    ];
 }
