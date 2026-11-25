@@ -9,10 +9,24 @@ class User extends Model
     protected $table = 'usuarios';
     public $timestamps = false;
 
-    //fillable indica que campos pueden entrar en el request
     protected $fillable = [
+        'nombre',
         'correo',
         'usuario',
-        'contraseña',
+        'contrasena',
+        'rol',
+        'token',
+        'sesion_activa',
+        'estado',
+    ];
+
+    protected $hidden = [
+        'contrasena',
+        'token',
+    ];
+
+    protected $casts = [
+        'id' => 'integer',
+        'sesion_activa' => 'boolean',
     ];
 }

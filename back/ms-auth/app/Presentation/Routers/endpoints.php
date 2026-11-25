@@ -1,19 +1,23 @@
 <?php
 
-// use Psr\Http\Message\ResponseInterface as Response;
-// use Psr\Http\Message\ServerRequestInterface as Request;
+use App\Middlewares\AuthMiddleware;
 use App\Presentation\Repositories\UserRepository;
 use Slim\App;
+use Slim\Routing\RouteCollectorProxy;
 
 return function (App $app) {
-    // $app->get('/usuarios', function (Request $request, Response $response, $args) {
-    //     $repository = new UserRepository();
-    //     return $repository->all($request, $response, $args);
-    // });
-    
+    // Rutas públicas de autenticación y validación de sesión
     $app->post('/login', [UserRepository::class, 'login']);
-    $app->get('/usuarios', [UserRepository::class, 'all']);
+    $app->post('/logout', [UserRepository::class, 'logout']);
+    $app->get('/validar-sesion', [UserRepository::class, 'validarSesion']);
+    $app->post('/validar-sesion', [UserRepository::class, 'validarSesion']);
     $app->post('/usuarios', [UserRepository::class, 'create']);
-    $app->put('/usuarios/{id}', [UserRepository::class, 'update']);
-    $app->delete('/usuarios/{id}', [UserRepository::class, 'delete']);
+
+    // Rutas protegidas (requieren token válido y sesión activa)
+    $app->group('', function (RouteCollectorProxy $group) {
+        $group->get('/usuarios', [UserRepository::class, 'all']);
+        $group->get('/usuarios/{id:[0-9]+}', [UserRepository::class, 'find']);
+        $group->put('/usuarios/{id:[0-9]+}', [UserRepository::class, 'update']);
+        $group->delete('/usuarios/{id:[0-9]+}', [UserRepository::class, 'delete']);
+    })->add(new AuthMiddleware());
 };
