@@ -26,7 +26,7 @@ class AuthValidator
             'correo',
             'username',
             'email',
-        ]);
+        ]);6
 
         if ($identificador === '') {
             throw new InvalidArgumentException('Debe ingresar un usuario o correo.');
