@@ -1,19 +1,20 @@
 <?php
 
-// use Psr\Http\Message\ResponseInterface as Response;
-// use Psr\Http\Message\ServerRequestInterface as Request;
-use App\Presentation\Repositories\UserRepository;
+use App\Middlewares\AuthMiddleware;
+use App\Presentation\Repositories\ConductorRepository;
 use Slim\App;
+use Slim\Routing\RouteCollectorProxy;
 
 return function (App $app) {
-    // $app->get('/usuarios', function (Request $request, Response $response, $args) {
-    //     $repository = new UserRepository();
-    //     return $repository->all($request, $response, $args);
-    // });
-    
-    $app->post('/login', [UserRepository::class, 'login']);
-    $app->get('/usuarios', [UserRepository::class, 'all']);
-    $app->post('/usuarios', [UserRepository::class, 'create']);
-    $app->put('/usuarios/{id}', [UserRepository::class, 'update']);
-    $app->delete('/usuarios/{id}', [UserRepository::class, 'delete']);
+    $app->group('/conductores', function (RouteCollectorProxy $group) {
+        $group->get('', [ConductorRepository::class, 'all']);
+        $group->get('/documento/{documento}', [ConductorRepository::class, 'byDocumento']);
+        $group->get('/licencia/{numero_licencia}', [ConductorRepository::class, 'byLicencia']);
+        $group->get('/estado/{estado}', [ConductorRepository::class, 'byEstado']);
+        $group->get('/{id:[0-9]+}', [ConductorRepository::class, 'find']);
+        $group->post('', [ConductorRepository::class, 'create']);
+        $group->put('/{id:[0-9]+}', [ConductorRepository::class, 'update']);
+        $group->patch('/{id:[0-9]+}/estado', [ConductorRepository::class, 'changeEstado']);
+        $group->delete('/{id:[0-9]+}', [ConductorRepository::class, 'delete']);
+    })->add(new AuthMiddleware());
 };

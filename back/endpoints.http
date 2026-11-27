@@ -80,3 +80,69 @@ Accept: application/json
 GET {{baseUrl}}/validar-sesion
 Authorization: Bearer {{token}}
 Accept: application/json
+
+
+### =========================================
+### MS-CONDUCTORES
+### =========================================
+@conductoresUrl = http://localhost/parcial40/back/ms-conductores/public
+
+### Health check ms-conductores
+GET {{conductoresUrl}}/
+Accept: application/json
+
+### 11. Listar todos los conductores (requiere token)
+GET {{conductoresUrl}}/conductores
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### 12. Crear conductor
+POST {{conductoresUrl}}/conductores
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombres": "Carlos Alberto",
+  "apellidos": "Gómez Ruiz",
+  "documento": "1020304050",
+  "telefono": "3001234567",
+  "correo": "carlos.gomez@ejemplo.com",
+  "numero_licencia": "LIC-998877",
+  "categoria_licencia": "C2",
+  "fecha_vencimiento_licencia": "2028-12-31"
+}
+
+### 13. Consultar conductor por documento
+GET {{conductoresUrl}}/conductores/documento/1020304050
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### 14. Consultar conductor por licencia
+GET {{conductoresUrl}}/conductores/licencia/LIC-998877
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### 15. Consultar conductores por estado (disponible, en_ruta, inactivo)
+GET {{conductoresUrl}}/conductores/estado/disponible
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### 16. Editar conductor (información personal, licencia y/o estado)
+PUT {{conductoresUrl}}/conductores/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "telefono": "3119998877",
+  "categoria_licencia": "C3",
+  "fecha_vencimiento_licencia": "2029-06-30"
+}
+
+### 17. Cambiar estado del conductor (disponible | en_ruta | inactivo)
+PATCH {{conductoresUrl}}/conductores/1/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "estado": "en_ruta"
+}
