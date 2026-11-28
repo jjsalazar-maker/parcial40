@@ -1,19 +1,20 @@
 <?php
 
-// use Psr\Http\Message\ResponseInterface as Response;
-// use Psr\Http\Message\ServerRequestInterface as Request;
-use App\Presentation\Repositories\UserRepository;
+use App\Middlewares\AuthMiddleware;
+use App\Presentation\Repositories\VehiculoRepository;
 use Slim\App;
+use Slim\Routing\RouteCollectorProxy;
 
 return function (App $app) {
-    // $app->get('/usuarios', function (Request $request, Response $response, $args) {
-    //     $repository = new UserRepository();
-    //     return $repository->all($request, $response, $args);
-    // });
-    
-    $app->post('/login', [UserRepository::class, 'login']);
-    $app->get('/usuarios', [UserRepository::class, 'all']);
-    $app->post('/usuarios', [UserRepository::class, 'create']);
-    $app->put('/usuarios/{id}', [UserRepository::class, 'update']);
-    $app->delete('/usuarios/{id}', [UserRepository::class, 'delete']);
+    $app->group('/vehiculos', function (RouteCollectorProxy $group) {
+        $group->get('', [VehiculoRepository::class, 'all']);
+        $group->get('/placa/{placa}', [VehiculoRepository::class, 'byPlaca']);
+        $group->get('/estado/{estado}', [VehiculoRepository::class, 'byEstado']);
+        $group->get('/tipo/{tipo}', [VehiculoRepository::class, 'byTipo']);
+        $group->get('/{id:[0-9]+}', [VehiculoRepository::class, 'find']);
+        $group->post('', [VehiculoRepository::class, 'create']);
+        $group->put('/{id:[0-9]+}', [VehiculoRepository::class, 'update']);
+        $group->patch('/{id:[0-9]+}/estado', [VehiculoRepository::class, 'changeEstado']);
+        $group->delete('/{id:[0-9]+}', [VehiculoRepository::class, 'delete']);
+    })->add(new AuthMiddleware());
 };

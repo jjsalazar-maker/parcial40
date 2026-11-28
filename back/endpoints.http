@@ -146,3 +146,68 @@ Content-Type: application/json
 {
   "estado": "en_ruta"
 }
+
+
+### =========================================
+### MS-VEHICULOS
+### =========================================
+@vehiculosUrl = http://localhost/parcial40/back/ms-vehiculos/public
+
+### Health check ms-vehiculos
+GET {{vehiculosUrl}}/
+Accept: application/json
+
+### 18. Listar todos los vehículos (requiere token)
+GET {{vehiculosUrl}}/vehiculos
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### 19. Crear vehículo
+POST {{vehiculosUrl}}/vehiculos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "placa": "ABC123",
+  "tipo_vehiculo": "Camión",
+  "capacidad_carga": 5000,
+  "modelo": "2024",
+  "marca": "Chevrolet",
+  "estado": "disponible"
+}
+
+### 20. Consultar vehículo por placa
+GET {{vehiculosUrl}}/vehiculos/placa/ABC123
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### 21. Consultar vehículos por estado (disponible, en_ruta, mantenimiento, inactivo)
+GET {{vehiculosUrl}}/vehiculos/estado/disponible
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### 22. Consultar vehículos por tipo
+GET {{vehiculosUrl}}/vehiculos/tipo/Camión
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### 23. Editar vehículo (capacidad, estado e información general)
+PUT {{vehiculosUrl}}/vehiculos/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "capacidad_carga": 6500,
+  "estado": "mantenimiento",
+  "modelo": "2025",
+  "marca": "Chevrolet"
+}
+
+### 24. Cambiar estado del vehículo
+PATCH {{vehiculosUrl}}/vehiculos/1/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "estado": "en_ruta"
+}
